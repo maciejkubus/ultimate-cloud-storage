@@ -15,6 +15,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Response } from 'express';
+import { AuthorizationGuard } from 'src/authorization/guards/authorization.guard';
 import { FilesService } from './files.service';
 
 @Controller('files')
@@ -27,21 +28,19 @@ export class FilesController {
     return await this.filesService.findByUserId(req.user.id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AuthorizationGuard)
   @Get(':id')
   async findOne(@Param('id') id: number, @Request() req) {
-    this.validateUser(+id, req.user.id);
     return this.filesService.findOne(+id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AuthorizationGuard)
   @Get(':id/download')
   async downloadOne(
     @Param('id') id,
     @Res({ passthrough: true }) res: Response,
     @Request() req,
   ) {
-    this.validateUser(+id, req.user.id);
     return this.filesService.downloadOne(+id, res);
   }
 
@@ -52,10 +51,9 @@ export class FilesController {
     return this.filesService.create(file, req.user.id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), AuthorizationGuard)
   @Delete(':id')
   async deleteFile(@Param('id') id: number, @Request() req) {
-    this.validateUser(+id, req.user.id);
     await this.filesService.delete(+id);
     return { message: 'File deleted successfully' };
   }

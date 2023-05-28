@@ -4,6 +4,7 @@ import { AlbumsModule } from './albums/albums.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthenticationModule } from './auth/authentication.module';
+import { AuthorizationModule } from './authorization/authorization.module';
 import { DatabaseModule } from './database/database.module';
 import { FilesModule } from './files/files.module';
 import { UsersModule } from './users/users.module';
@@ -16,6 +17,7 @@ import { UsersModule } from './users/users.module';
     AuthenticationModule,
     UsersModule,
     AlbumsModule,
+    AuthorizationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

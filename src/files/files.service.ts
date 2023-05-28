@@ -4,6 +4,7 @@ import {
   NotFoundException,
   StreamableFile,
 } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import type { Response } from 'express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -17,6 +18,7 @@ export class FilesService {
     @Inject('FILE_REPOSITORY')
     private fileRepository: Repository<File>,
     private usersService: UsersService,
+    private moduleRef: ModuleRef,
   ) {}
 
   async findAll(): Promise<File[]> {
