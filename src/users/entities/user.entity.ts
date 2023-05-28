@@ -1,4 +1,5 @@
 import { hashSync } from 'bcrypt';
+import { File } from 'src/files/entities/file.entity';
 import {
   AfterLoad,
   BeforeInsert,
@@ -6,6 +7,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
@@ -33,6 +35,9 @@ export class User {
 
   @UpdateDateColumn()
   updated?: Date;
+
+  @OneToMany(() => File, (file) => file.user)
+  files: File[];
 
   private tempPassword?: string;
 

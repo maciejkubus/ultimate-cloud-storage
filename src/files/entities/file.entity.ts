@@ -1,19 +1,26 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class File {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 500 })
-  name: string;
-
   @Column('text')
-  description: string;
+  originalName: string;
 
   @Column({ length: 500 })
   filename: string;
 
-  //albumId: number;
-  //userId: number;
+  @Column('text', { nullable: true })
+  mimetype?: string;
+
+  @Column('int')
+  size: number;
+
+  @Column('text')
+  path: string;
+
+  @ManyToOne(() => User, (user) => user.files, { nullable: true })
+  user?: User;
 }
