@@ -4,7 +4,7 @@ import { User } from 'src/users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
-export class AuthService {
+export class AuthenticationService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,

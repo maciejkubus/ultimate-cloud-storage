@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthenticationModule } from 'src/auth/authentication.module';
 import { DatabaseModule } from 'src/database/database.module';
 import { UsersModule } from 'src/users/users.module';
 import { FilesController } from './files.controller';
@@ -14,7 +14,7 @@ import { FilesService } from './files.service';
       dest: './uploads',
     }),
     UsersModule,
-    AuthModule,
+    AuthenticationModule,
   ],
   providers: [FilesService, ...filesProviders],
   exports: [FilesService],
