@@ -21,7 +21,7 @@ export class AuthService {
     };
   }
 
-  async register(userData: User) {
+  async register(userData: Partial<User>) {
     const userExist = await this.usersService.findOneBy([
       { username: userData.username },
       { email: userData.email },

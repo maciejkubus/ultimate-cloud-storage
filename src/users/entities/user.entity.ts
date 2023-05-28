@@ -1,4 +1,8 @@
+import { hashSync } from 'bcrypt';
 import {
+  AfterLoad,
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -16,7 +20,7 @@ export class User {
   @Unique(['username'])
   username: string;
 
-  @Column('text')
+  @Column('text', { select: false })
   password: string;
 
   @Column('text')
@@ -29,4 +33,19 @@ export class User {
 
   @UpdateDateColumn()
   updated?: Date;
+
+  private tempPassword?: string;
+
+  @AfterLoad()
+  private loadTempPassword(): void {
+    this.tempPassword = this.password;
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  private encryptPassword(): void {
+    if (this.tempPassword !== this.password) {
+      this.password = hashSync(this.password, 8);
+    }
+  }
 }

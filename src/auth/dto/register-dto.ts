@@ -15,4 +15,6 @@ export class RegisterDto {
   @IsNotEmpty()
   @IsEmail()
   email: string;
+
+  files = [];
 }
