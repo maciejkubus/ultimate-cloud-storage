@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -9,19 +10,28 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
+  async validateUser(username: string, password: string): Promise<any> {
+    return await this.usersService.validateUser(username, password);
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(user: User) {
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign({ id: user.id }),
+      user: user,
     };
+  }
+
+  async register(userData: User) {
+    const userExist = await this.usersService.findOneBy([
+      { username: userData.username },
+      { email: userData.email },
+    ]);
+    if (!userExist) return await this.usersService.create(userData);
+
+    if (userExist.username === userData.username)
+      throw new BadRequestException('Username already exist');
+
+    if (userExist.email === userData.email)
+      throw new BadRequestException('Email already exist');
   }
 }
