@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class File {
+export class Album {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,20 +20,8 @@ export class File {
   updated?: Date;
 
   @Column('text')
-  originalName: string;
+  title: string;
 
-  @Column({ length: 500 })
-  filename: string;
-
-  @Column('text', { nullable: true })
-  mimetype?: string;
-
-  @Column('int')
-  size: number;
-
-  @Column('text')
-  path: string;
-
-  @ManyToOne(() => User, (user) => user.files, { nullable: true })
+  @ManyToOne(() => User, (user) => user.albums, { nullable: true, eager: true })
   user?: User;
 }

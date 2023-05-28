@@ -1,4 +1,5 @@
 import { hashSync } from 'bcrypt';
+import { Album } from 'src/albums/entities/album.entity';
 import { File } from 'src/files/entities/file.entity';
 import {
   AfterLoad,
@@ -38,6 +39,9 @@ export class User {
 
   @OneToMany(() => File, (file) => file.user)
   files: File[];
+
+  @OneToMany(() => Album, (album) => album.user)
+  albums: Album[];
 
   private tempPassword?: string;
 

@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { FilesModule } from './files/files.module';
 import { UsersModule } from './users/users.module';
+import { AlbumsModule } from './albums/albums.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UsersModule } from './users/users.module';
     FilesModule,
     AuthModule,
     UsersModule,
+    AlbumsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
