@@ -31,6 +31,17 @@ export class FilesService {
     });
   }
 
+  async findByIds(ids: number[]): Promise<File[]> {
+    const files = [];
+    for (const id of ids) {
+      const file = await this.findOne(id);
+      if (file) {
+        files.push(file);
+      }
+    }
+    return files;
+  }
+
   async create(file: Express.Multer.File, userId: number): Promise<File> {
     const newFile = new File();
     newFile.originalName = file.originalname;

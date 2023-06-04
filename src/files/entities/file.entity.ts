@@ -1,11 +1,8 @@
-import { Album } from 'src/albums/entities/album.entity';
-import { AlbumFile } from 'src/database/entities/album-file.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -39,7 +36,4 @@ export class File {
 
   @ManyToOne(() => User, (user) => user.files, { nullable: true })
   user?: User;
-
-  @ManyToMany(() => Album, (album) => album.albumFiles)
-  albumFiles: AlbumFile[];
 }

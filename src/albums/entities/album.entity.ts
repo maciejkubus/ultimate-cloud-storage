@@ -1,10 +1,10 @@
-import { AlbumFile } from 'src/database/entities/album-file.entity';
 import { File } from 'src/files/entities/file.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -28,6 +28,7 @@ export class Album {
   @ManyToOne(() => User, (user) => user.albums, { nullable: true, eager: true })
   user?: User;
 
-  @ManyToMany(() => File, (file) => file.albumFiles)
-  albumFiles: AlbumFile[];
+  @ManyToMany(() => File, { eager: true })
+  @JoinTable()
+  files: File[];
 }

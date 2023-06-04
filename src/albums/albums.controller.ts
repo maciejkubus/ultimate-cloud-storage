@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -51,5 +52,50 @@ export class AlbumsController {
   @Delete(':id')
   remove(@Param('id') id: string, @Request() req) {
     return this.albumsService.remove(+id);
+  }
+
+  @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)
+  @Post(':id/add')
+  async addFilesToAlbum(
+    @Param('id') albumId: number,
+    @Body() addFilesDto: { files: number[] },
+    @Request() req,
+  ) {
+    const album = await this.albumsService.findOne(albumId);
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
+    await this.albumsService.addFilesToAlbum(
+      album,
+      addFilesDto.files,
+      req.user.id,
+    );
+    return album;
+  }
+
+  @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)
+  @Post(':id/remove')
+  async removeFilesFromAlbum(
+    @Param('id') albumId: number,
+    @Body() removeFilesDto: { files: number[] },
+    @Request() req,
+  ) {
+    const album = await this.albumsService.findOne(albumId);
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
+    await this.albumsService.removeFilesFromAlbum(
+      album,
+      removeFilesDto.files,
+      req.user.id,
+    );
+    return this.albumsService.findOne(albumId);
+  }
+
+  @Get('file/:id')
+  async findWithFiles(@Param('id') id: string) {
+    return this.albumsService.findWithFiles(+id);
   }
 }
