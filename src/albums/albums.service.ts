@@ -33,6 +33,13 @@ export class AlbumsService {
     return this.albumRepository.findOne({ where: { id } });
   }
 
+  async findByUserId(id: number): Promise<Album[]> {
+    return await this.albumRepository.find({
+      relations: ['user'],
+      where: { user: { id } },
+    });
+  }
+
   async update(id: number, updateAlbumDto: UpdateAlbumDto): Promise<Album> {
     await this.albumRepository.update(id, updateAlbumDto);
     return this.findOne(id);
@@ -40,5 +47,14 @@ export class AlbumsService {
 
   remove(id: number) {
     return this.albumRepository.delete(id);
+  }
+
+  async isAlbumOwner(albumId: number, userId: number): Promise<boolean> {
+    const album = await this.findOne(albumId);
+    if (!album || !album.user) {
+      return false;
+    }
+
+    return album.user.id === userId;
   }
 }
