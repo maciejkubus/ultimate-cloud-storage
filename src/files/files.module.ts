@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
-import { AuthenticationModule } from 'src/auth/authentication.module';
+import { AuthenticationModule } from 'src/authentication/authentication.module';
 import { DatabaseModule } from 'src/database/database.module';
 import { UsersModule } from 'src/users/users.module';
 import { FilesController } from './files.controller';
