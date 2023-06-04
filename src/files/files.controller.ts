@@ -17,30 +17,48 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
+import { File } from './entities/file.entity';
 import { FilesService } from './files.service';
 import { FileOwnerGuard } from './guards/file-owner.guard';
 
+@ApiTags('files')
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Get('mine')
+  @ApiResponse({
+    status: 200,
+    description: 'Files of logged in user.',
+    type: [File],
+  })
   async findMine(@Request() req) {
     return await this.filesService.findByUserId(req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'), FileOwnerGuard)
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'File',
+    type: File,
+  })
   async findOne(@Param('id') id: number, @Request() req) {
     return this.filesService.findOne(+id);
   }
 
   @UseGuards(AuthGuard('jwt'), FileOwnerGuard)
   @Get(':id/download')
+  @ApiResponse({
+    status: 200,
+    description: 'File stream for download.',
+  })
   async downloadOne(
     @Param('id') id,
     @Res({ passthrough: true }) res: Response,
@@ -63,6 +81,11 @@ export class FilesController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @UseInterceptors(FileInterceptor('file'))
+  @ApiResponse({
+    status: 201,
+    description: 'File uploaded.',
+    type: File,
+  })
   uploadFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -77,6 +100,10 @@ export class FilesController {
 
   @UseGuards(AuthGuard('jwt'), FileOwnerGuard)
   @Delete(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'File deleted.',
+  })
   async deleteFile(@Param('id') id: number, @Request() req) {
     await this.filesService.delete(+id);
     return { message: 'File deleted successfully' };

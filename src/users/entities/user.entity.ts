@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { hashSync } from 'bcrypt';
 import { Album } from 'src/albums/entities/album.entity';
 import { File } from 'src/files/entities/file.entity';
@@ -17,10 +18,12 @@ import {
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
+  @ApiProperty({ example: 1, description: 'Unique identifier' })
   id?: number;
 
   @Column('text')
   @Unique(['username'])
+  @ApiProperty({ example: 'john_doe', description: 'User name' })
   username: string;
 
   @Column('text', { select: false })
@@ -28,13 +31,22 @@ export class User {
 
   @Column('text')
   @Unique(['email'])
+  @ApiProperty({ example: 'user@domain.com', description: 'User email' })
   email: string;
 
   @Column('text')
   @CreateDateColumn()
+  @ApiProperty({
+    example: '2023-06-04T22:42:33.278Z',
+    description: 'User created date',
+  })
   created?: Date;
 
   @UpdateDateColumn()
+  @ApiProperty({
+    example: '2023-06-04T22:42:33.278Z',
+    description: 'User last updated date',
+  })
   updated?: Date;
 
   @OneToMany(() => File, (file) => file.user)

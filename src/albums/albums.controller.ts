@@ -11,35 +11,60 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AlbumsService } from './albums.service';
+import { AddFilesDto } from './dto/add-files-dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
+import { RemoveFilesDto } from './dto/remove-files-dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
+import { Album } from './entities/album.entity';
 import { AlbumOwnerGuard } from './guards/album-owner.guard';
 
+@ApiTags('albums')
 @Controller('albums')
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'Album created',
+    type: Album,
+  })
   create(@Body() createAlbumDto: CreateAlbumDto, @Request() req) {
     return this.albumsService.create(createAlbumDto, req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('mine')
+  @ApiResponse({
+    status: 200,
+    description: 'Albums of logged in user.',
+    type: [Album],
+  })
   async findMine(@Request() req) {
     return await this.albumsService.findByUserId(req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Album',
+    type: Album,
+  })
   findOne(@Param('id') id: string, @Request() req) {
     return this.albumsService.findOne(+id);
   }
 
   @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)
   @Patch(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Album updated',
+    type: Album,
+  })
   update(
     @Param('id') id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
@@ -50,15 +75,25 @@ export class AlbumsController {
 
   @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)
   @Delete(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Album deleted',
+  })
   remove(@Param('id') id: string, @Request() req) {
     return this.albumsService.remove(+id);
   }
 
   @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)
   @Post(':id/add')
+  @ApiBody({ type: AddFilesDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Files added to album',
+    type: Album,
+  })
   async addFilesToAlbum(
     @Param('id') albumId: number,
-    @Body() addFilesDto: { files: number[] },
+    @Body() addFilesDto: AddFilesDto,
     @Request() req,
   ) {
     const album = await this.albumsService.findOne(albumId);
@@ -76,9 +111,15 @@ export class AlbumsController {
 
   @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)
   @Post(':id/remove')
+  @ApiBody({ type: RemoveFilesDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Files removed from album',
+    type: Album,
+  })
   async removeFilesFromAlbum(
     @Param('id') albumId: number,
-    @Body() removeFilesDto: { files: number[] },
+    @Body() removeFilesDto: RemoveFilesDto,
     @Request() req,
   ) {
     const album = await this.albumsService.findOne(albumId);
@@ -95,6 +136,11 @@ export class AlbumsController {
   }
 
   @Get('file/:id')
+  @ApiResponse({
+    status: 200,
+    description: 'Array of albums with by file id',
+    type: [Album],
+  })
   async findWithFiles(@Param('id') id: string) {
     return this.albumsService.findWithFiles(+id);
   }
