@@ -1,10 +1,13 @@
 import {
   Controller,
   Delete,
+  FileTypeValidator,
   ForbiddenException,
   Get,
+  MaxFileSizeValidator,
   NotFoundException,
   Param,
+  ParseFilePipe,
   Post,
   Request,
   Res,
@@ -61,7 +64,18 @@ export class FilesController {
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File, @Request() req) {
+  uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 124000000 }),
+          new FileTypeValidator({ fileType: 'image/*' }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+    @Request() req,
+  ) {
     return this.filesService.create(file, req.user.id);
   }
 
