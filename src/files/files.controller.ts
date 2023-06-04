@@ -1,7 +1,6 @@
 import {
   Controller,
   Delete,
-  FileTypeValidator,
   ForbiddenException,
   Get,
   MaxFileSizeValidator,
@@ -67,10 +66,7 @@ export class FilesController {
   uploadFile(
     @UploadedFile(
       new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 124000000 }),
-          new FileTypeValidator({ fileType: 'image/*' }),
-        ],
+        validators: [new MaxFileSizeValidator({ maxSize: 124000000 })],
       }),
     )
     file: Express.Multer.File,
