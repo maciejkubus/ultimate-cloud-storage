@@ -73,4 +73,13 @@ export class FilesService {
   async delete(id: number): Promise<void> {
     await this.fileRepository.delete({ id });
   }
+
+  async isFileOwner(fileId: number, userId: number): Promise<boolean> {
+    const file = await this.findOne(fileId);
+    if (!file || !file.user) {
+      return false;
+    }
+
+    return file.user.id === userId;
+  }
 }

@@ -16,6 +16,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Response } from 'express';
 import { FilesService } from './files.service';
+import { FileOwnerGuard } from './guards/file-owner.guard';
 
 @Controller('files')
 export class FilesController {
@@ -27,13 +28,13 @@ export class FilesController {
     return await this.filesService.findByUserId(req.user.id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), FileOwnerGuard)
   @Get(':id')
   async findOne(@Param('id') id: number, @Request() req) {
     return this.filesService.findOne(+id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), FileOwnerGuard)
   @Get(':id/download')
   async downloadOne(
     @Param('id') id,
@@ -50,7 +51,7 @@ export class FilesController {
     return this.filesService.create(file, req.user.id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), FileOwnerGuard)
   @Delete(':id')
   async deleteFile(@Param('id') id: number, @Request() req) {
     await this.filesService.delete(+id);
