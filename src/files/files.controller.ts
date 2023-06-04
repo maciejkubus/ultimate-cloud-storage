@@ -8,6 +8,7 @@ import {
   Post,
   Request,
   Res,
+  StreamableFile,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -15,6 +16,8 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Response } from 'express';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 import { FilesService } from './files.service';
 import { FileOwnerGuard } from './guards/file-owner.guard';
 
@@ -41,7 +44,18 @@ export class FilesController {
     @Res({ passthrough: true }) res: Response,
     @Request() req,
   ) {
-    return this.filesService.downloadOne(+id, res);
+    const file = await this.filesService.findOne(+id);
+
+    const headers = {};
+    if (file.mimetype) headers['Content-Type'] = file.mimetype;
+    if (file.originalName)
+      headers[
+        'Content-Disposition'
+      ] = `attachment; filename="${file.originalName}"`;
+    res.set(headers);
+
+    const streamableFile = createReadStream(join(process.cwd(), file.path));
+    return new StreamableFile(streamableFile);
   }
 
   @UseGuards(AuthGuard('jwt'))

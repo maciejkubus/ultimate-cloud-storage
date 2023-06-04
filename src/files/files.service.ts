@@ -1,13 +1,5 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  StreamableFile,
-} from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import type { Response } from 'express';
-import { createReadStream } from 'fs';
-import { join } from 'path';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { File } from './entities/file.entity';
@@ -30,22 +22,6 @@ export class FilesService {
       relations: ['user'],
       where: { id },
     });
-  }
-
-  async downloadOne(id: number, res: Response): Promise<StreamableFile> {
-    const file = await this.findOne(id);
-    if (!file) throw new NotFoundException('File not found');
-
-    const headers = {};
-    if (file.mimetype) headers['Content-Type'] = file.mimetype;
-    if (file.originalName)
-      headers[
-        'Content-Disposition'
-      ] = `attachment; filename="${file.originalName}"`;
-    res.set(headers);
-
-    const streamableFile = createReadStream(join(process.cwd(), file.path));
-    return new StreamableFile(streamableFile);
   }
 
   async findByUserId(id: number): Promise<File[]> {
