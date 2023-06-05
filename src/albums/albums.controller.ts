@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AlbumsService } from './albums.service';
 import { AddFilesDto } from './dto/add-files-dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -20,7 +20,8 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { AlbumOwnerGuard } from './guards/album-owner.guard';
 
-@ApiTags('albums')
+@ApiTags('Albums')
+@ApiBearerAuth()
 @Controller('albums')
 export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}

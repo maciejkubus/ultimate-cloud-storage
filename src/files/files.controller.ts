@@ -25,12 +25,11 @@ import { File } from './entities/file.entity';
 import { FilesService } from './files.service';
 import { FileOwnerGuard } from './guards/file-owner.guard';
 
-@ApiTags('files')
+@ApiTags('Files')
+@ApiBearerAuth()
 @Controller('files')
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
-
-  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Get('mine')
   @ApiResponse({
