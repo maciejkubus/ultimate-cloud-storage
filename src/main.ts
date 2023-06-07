@@ -9,7 +9,12 @@ async function bootstrap() {
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.setGlobalPrefix('api/v1');
-  app.enableCors();
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Ultimate Cloud Storage API')
