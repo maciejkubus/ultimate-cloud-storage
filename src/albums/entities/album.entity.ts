@@ -40,7 +40,7 @@ export class Album {
   @ApiProperty({ description: 'User', type: () => User })
   user?: User;
 
-  @ManyToMany(() => File, { eager: true })
+  @ManyToMany(() => File, { eager: false })
   @JoinTable()
   @ApiProperty({ description: 'Files', type: () => [File] })
   files: File[];

@@ -37,7 +37,10 @@ export class AlbumsService {
   }
 
   findOne(id: number): Promise<Album> {
-    return this.albumRepository.findOne({ where: { id } });
+    return this.albumRepository.findOne({
+      relations: ['files'],
+      where: { id },
+    });
   }
 
   async findByUserId(id: number): Promise<Album[]> {
