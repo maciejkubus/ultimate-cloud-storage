@@ -1,11 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { hashSync } from 'bcrypt';
-import { Album } from 'src/albums/entities/album.entity';
-import { File } from 'src/files/entities/file.entity';
 import {
-  AfterLoad,
-  BeforeInsert,
-  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -14,6 +9,8 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { Album } from '../../albums/entities/album.entity';
+import { File } from '../../files/entities/file.entity';
 
 @Entity()
 export class User {
@@ -57,16 +54,20 @@ export class User {
 
   private tempPassword?: string;
 
-  @AfterLoad()
-  private loadTempPassword(): void {
-    this.tempPassword = this.password;
-  }
+  // @AfterLoad()
+  // private loadTempPassword(): void {
+  //   this.tempPassword = this.password;
+  // }
 
-  @BeforeInsert()
-  @BeforeUpdate()
-  private encryptPassword(): void {
-    if (this.tempPassword !== this.password) {
-      this.password = hashSync(this.password, 8);
-    }
+  // @BeforeInsert()
+  // @BeforeUpdate()
+  // private encryptPassword(): void {
+  //   if (this.tempPassword !== this.password) {
+  //     this.password = hashSync(this.password, 8);
+  //   }
+  // }
+
+  public hashPassword(password: string): void {
+    this.password = hashSync(password, 8);
   }
 }

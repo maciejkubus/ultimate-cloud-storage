@@ -1,7 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { compareSync } from 'bcrypt';
-import { Repository } from 'typeorm';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { FindOptionsWhere, Repository } from 'typeorm';
+import { ChangePasswordDto } from './dto/change-password-dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -11,12 +11,12 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findAll(): Promise<User[]> {
+  findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
   async findOneBy(
-    options: Partial<User> | Array<Partial<User>>,
+    options: FindOptionsWhere<User> | FindOptionsWhere<User>[],
   ): Promise<User> {
     return await this.userRepository.findOne({
       where: options,
@@ -35,7 +35,22 @@ export class UsersService {
     return this.userRepository.save(newUser);
   }
 
-  async update(id: number, user: UpdateUserDto): Promise<User> {
+  async update(id: number, user: Partial<User>): Promise<User> {
+    await this.userRepository.update(id, user);
+    return this.findOne(id);
+  }
+
+  async changePassword(id: number, data: ChangePasswordDto): Promise<User> {
+    const user = await await this.userRepository.findOne({
+      select: ['id', 'username', 'password', 'email'],
+      where: { id },
+    });
+    const validated = await this.validateUser(
+      user.username,
+      data.currentPassword,
+    );
+    if (!validated) throw new ForbiddenException('Invalid password');
+    user.hashPassword(data.newPassword);
     await this.userRepository.update(id, user);
     return this.findOne(id);
   }

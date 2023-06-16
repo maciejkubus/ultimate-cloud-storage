@@ -1,6 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { File } from 'src/files/entities/file.entity';
-import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,6 +9,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { File } from '../../files/entities/file.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class Album {

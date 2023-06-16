@@ -26,7 +26,11 @@ export class AuthenticationService {
       { username: userData.username },
       { email: userData.email },
     ]);
-    if (!userExist) return await this.usersService.create(userData);
+    if (!userExist) {
+      const user = await this.usersService.create(userData);
+      user.hashPassword(userData.password);
+      return this.usersService.update(user.id, user);
+    }
 
     if (userExist.username === userData.username)
       throw new BadRequestException('Username already exist');

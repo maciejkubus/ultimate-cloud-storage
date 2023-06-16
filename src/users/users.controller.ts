@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ChangePasswordDto } from './dto/change-password-dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { MyAccountGuard } from './guards/my-account.guard';
@@ -67,6 +68,21 @@ export class UsersController {
     @Request() req,
   ) {
     return this.usersService.update(+id, updateUserDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'), MyAccountGuard)
+  @Patch(':id/change-password')
+  @ApiResponse({
+    status: 200,
+    description: 'User updated.',
+    type: User,
+  })
+  changePassword(
+    @Param('id') id: number,
+    @Body() changePasswordDto: ChangePasswordDto,
+    @Request() req,
+  ) {
+    return this.usersService.changePassword(+id, changePasswordDto);
   }
 
   @UseGuards(AuthGuard('jwt'), MyAccountGuard)
