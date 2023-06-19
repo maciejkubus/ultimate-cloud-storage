@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MulterModule } from '@nestjs/platform-express';
+import { AlbumsModule } from 'src/albums/albums.module';
 import { AuthenticationModule } from 'src/authentication/authentication.module';
 import { DatabaseModule } from 'src/database/database.module';
 import { UsersModule } from 'src/users/users.module';
@@ -15,6 +16,7 @@ import { FilesService } from './files.service';
     }),
     UsersModule,
     AuthenticationModule,
+    forwardRef(() => AlbumsModule),
   ],
   providers: [FilesService, ...filesProviders],
   exports: [FilesService],

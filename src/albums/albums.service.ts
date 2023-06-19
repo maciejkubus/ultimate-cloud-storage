@@ -3,20 +3,22 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
 import { FilesService } from 'src/files/files.service';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateAlbumDto } from './dto/create-album.dto';
+import { SetThumbnailDto } from './dto/set-thumbnail.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
-
 @Injectable()
 export class AlbumsService {
   constructor(
     @Inject('ALBUM_REPOSITORY')
     private albumRepository: Repository<Album>,
     private usersService: UsersService,
+    @Inject(forwardRef(() => FilesService))
     private fileService: FilesService,
   ) {}
 
@@ -58,9 +60,42 @@ export class AlbumsService {
       .getMany();
   }
 
+  async findAllWithThumbnail(fileId: number): Promise<Album[]> {
+    return await this.albumRepository
+      .createQueryBuilder('album')
+      .leftJoinAndSelect('album.thumbnail', 'thumbnail')
+      .where('thumbnail.id = :fileId', { fileId })
+      .getMany();
+  }
+
   async update(id: number, updateAlbumDto: UpdateAlbumDto): Promise<Album> {
     await this.albumRepository.update(id, updateAlbumDto);
     return this.findOne(id);
+  }
+
+  async updateThumbnail(albumId: number, setThumbnailDto: SetThumbnailDto) {
+    const album = await this.findOne(albumId);
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
+    if (setThumbnailDto.fileId == null) {
+      album.thumbnail = null;
+      return this.albumRepository.save(album);
+    }
+
+    const file = await this.fileService.findOne(setThumbnailDto.fileId);
+    if (!file) {
+      throw new NotFoundException('File not found');
+    }
+
+    if (!album.files.find((f) => f.id === file.id)) {
+      throw new BadRequestException('File is not in album');
+    }
+
+    album.thumbnail = file;
+
+    return this.albumRepository.save(album);
   }
 
   async remove(id: number) {

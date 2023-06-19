@@ -44,4 +44,8 @@ export class Album {
   @JoinTable()
   @ApiProperty({ description: 'Files', type: () => [File] })
   files: File[];
+
+  @ManyToOne(() => File, { nullable: true, eager: true })
+  @ApiProperty({ description: 'Thumbnail', type: () => File })
+  thumbnail?: File;
 }

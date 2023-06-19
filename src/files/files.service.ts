@@ -1,5 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import { AlbumsService } from 'src/albums/albums.service';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { File } from './entities/file.entity';
@@ -10,6 +11,8 @@ export class FilesService {
     @Inject('FILE_REPOSITORY')
     private fileRepository: Repository<File>,
     private usersService: UsersService,
+    @Inject(forwardRef(() => AlbumsService))
+    private albumService: AlbumsService,
     private moduleRef: ModuleRef,
   ) {}
 
@@ -58,6 +61,12 @@ export class FilesService {
   }
 
   async delete(id: number): Promise<void> {
+    // remove thumbnail from albums
+    const albums = await this.albumService.findAllWithThumbnail(id);
+    for (const album of albums) {
+      await this.albumService.updateThumbnail(album.id, { fileId: null });
+    }
+
     await this.fileRepository.delete({ id });
   }
 

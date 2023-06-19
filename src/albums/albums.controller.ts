@@ -16,6 +16,7 @@ import { AlbumsService } from './albums.service';
 import { AddFilesDto } from './dto/add-files-dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { RemoveFilesDto } from './dto/remove-files-dto';
+import { SetThumbnailDto } from './dto/set-thumbnail.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
 import { AlbumOwnerGuard } from './guards/album-owner.guard';
@@ -72,6 +73,21 @@ export class AlbumsController {
     @Request() req,
   ) {
     return this.albumsService.update(+id, updateAlbumDto);
+  }
+
+  @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)
+  @Patch(':id/thumbnail')
+  @ApiResponse({
+    status: 200,
+    description: 'Album thumbnail updated',
+    type: Album,
+  })
+  updateThumbnail(
+    @Param('id') id: string,
+    @Body() setThumbnailDto: SetThumbnailDto,
+    @Request() req,
+  ) {
+    return this.albumsService.updateThumbnail(+id, setThumbnailDto);
   }
 
   @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)

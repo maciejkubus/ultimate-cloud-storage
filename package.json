@@ -34,6 +34,7 @@
     "class-validator": ">=0.14.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.3.1",
+    "nestjs-paginate": "^8.1.4",
     "passport": "^0.6.0",
     "passport-http-bearer": "^1.0.1",
     "passport-jwt": "^4.0.1",
