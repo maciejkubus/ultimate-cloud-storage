@@ -77,6 +77,27 @@ export class FilesController {
     return new StreamableFile(streamableFile);
   }
 
+  @UseGuards(AuthGuard('jwt'), FileOwnerGuard)
+  @Get(':id/preview')
+  @ApiResponse({
+    status: 200,
+    description: 'File stream for preview.',
+  })
+  async previewOne(
+    @Param('id') id,
+    @Res({ passthrough: true }) res: Response,
+    @Request() req,
+  ) {
+    const file = await this.filesService.findOne(+id);
+
+    const headers = {};
+    if (file.mimetype) headers['Content-Type'] = file.mimetype;
+    res.set(headers);
+
+    const streamableFile = createReadStream(join(process.cwd(), file.path));
+    return new StreamableFile(streamableFile);
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @UseInterceptors(FileInterceptor('file'))
