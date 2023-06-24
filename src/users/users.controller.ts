@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
 import { ChangePasswordDto } from './dto/change-password-dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -37,11 +38,11 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'All users.',
-    type: [User],
+    type: Paginated<User>,
   })
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Paginate() query: PaginateQuery) {
+    return this.usersService.findAll(query);
   }
 
   @UseGuards(AuthGuard('jwt'))

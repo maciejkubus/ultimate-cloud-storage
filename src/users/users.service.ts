@@ -1,5 +1,11 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { compareSync } from 'bcrypt';
+import {
+  FilterOperator,
+  PaginateQuery,
+  Paginated,
+  paginate,
+} from 'nestjs-paginate';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { ChangePasswordDto } from './dto/change-password-dto';
 import { User } from './entities/user.entity';
@@ -11,8 +17,16 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  findAll(query: PaginateQuery): Promise<Paginated<User>> {
+    return paginate(query, this.userRepository, {
+      sortableColumns: ['id', 'username', 'email'],
+      defaultSortBy: [['username', 'ASC']],
+      searchableColumns: ['username', 'email'],
+      filterableColumns: {
+        username: [FilterOperator.EQ],
+        email: [FilterOperator.EQ],
+      },
+    });
   }
 
   async findOneBy(

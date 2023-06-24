@@ -20,6 +20,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { createReadStream } from 'fs';
+import { Paginate, PaginateQuery } from 'nestjs-paginate';
 import { join } from 'path';
 import { File } from './entities/file.entity';
 import { FilesService } from './files.service';
@@ -37,8 +38,8 @@ export class FilesController {
     description: 'Files of logged in user.',
     type: [File],
   })
-  async findMine(@Request() req) {
-    return await this.filesService.findByUserId(req.user.id);
+  findMine(@Request() req, @Paginate() query: PaginateQuery) {
+    return this.filesService.findByUserId(req.user.id, query);
   }
 
   @UseGuards(AuthGuard('jwt'), FileOwnerGuard)

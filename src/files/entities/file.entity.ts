@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Album } from 'src/albums/entities/album.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -55,4 +57,8 @@ export class File {
   @ManyToOne(() => User, (user) => user.files, { nullable: true })
   @ApiProperty({ description: 'User', type: () => User })
   user?: User;
+
+  @ManyToMany(() => Album, { eager: false })
+  @ApiProperty({ description: 'albums', type: () => [Album] })
+  albums: Album[];
 }

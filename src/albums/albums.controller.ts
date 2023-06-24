@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
 import { AlbumsService } from './albums.service';
 import { AddFilesDto } from './dto/add-files-dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -43,10 +44,10 @@ export class AlbumsController {
   @ApiResponse({
     status: 200,
     description: 'Albums of logged in user.',
-    type: [Album],
+    type: Paginated<Album>,
   })
-  async findMine(@Request() req) {
-    return await this.albumsService.findByUserId(req.user.id);
+  async findMine(@Request() req, @Paginate() query: PaginateQuery) {
+    return await this.albumsService.findByUserId(req.user.id, query);
   }
 
   @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)

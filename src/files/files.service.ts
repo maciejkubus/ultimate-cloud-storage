@@ -1,5 +1,11 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import {
+  FilterOperator,
+  PaginateQuery,
+  Paginated,
+  paginate,
+} from 'nestjs-paginate';
 import { AlbumsService } from 'src/albums/albums.service';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
@@ -27,10 +33,23 @@ export class FilesService {
     });
   }
 
-  async findByUserId(id: number): Promise<File[]> {
-    return await this.fileRepository.find({
+  findByUserId(id: number, query: PaginateQuery): Promise<Paginated<File>> {
+    return paginate(query, this.fileRepository, {
       relations: ['user'],
       where: { user: { id } },
+      sortableColumns: ['id', 'originalName', 'mimetype', 'size'],
+      searchableColumns: ['id', 'originalName', 'mimetype', 'size'],
+      filterableColumns: {
+        originalName: [FilterOperator.EQ],
+        mimetype: [FilterOperator.EQ],
+        size: [
+          FilterOperator.EQ,
+          FilterOperator.GT,
+          FilterOperator.LT,
+          FilterOperator.GTE,
+          FilterOperator.LTE,
+        ],
+      },
     });
   }
 

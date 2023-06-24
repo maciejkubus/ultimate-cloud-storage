@@ -5,6 +5,12 @@ import {
   NotFoundException,
   forwardRef,
 } from '@nestjs/common';
+import {
+  FilterOperator,
+  PaginateQuery,
+  Paginated,
+  paginate,
+} from 'nestjs-paginate';
 import { FilesService } from 'src/files/files.service';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
@@ -40,15 +46,21 @@ export class AlbumsService {
 
   findOne(id: number): Promise<Album> {
     return this.albumRepository.findOne({
-      relations: ['files'],
+      // relations: ['files'],
       where: { id },
     });
   }
 
-  async findByUserId(id: number): Promise<Album[]> {
-    return await this.albumRepository.find({
+  findByUserId(id: number, query: PaginateQuery): Promise<Paginated<Album>> {
+    return paginate(query, this.albumRepository, {
       relations: ['user'],
       where: { user: { id } },
+      sortableColumns: ['id', 'title'],
+      defaultSortBy: [['title', 'ASC']],
+      searchableColumns: ['title'],
+      filterableColumns: {
+        title: [FilterOperator.EQ],
+      },
     });
   }
 
