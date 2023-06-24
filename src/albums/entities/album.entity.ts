@@ -3,11 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { File } from '../../files/entities/file.entity';
 import { User } from '../../users/entities/user.entity';
@@ -40,12 +39,10 @@ export class Album {
   @ApiProperty({ description: 'User', type: () => User })
   user?: User;
 
-  @ManyToMany(() => File, { eager: false })
-  @JoinTable()
-  @ApiProperty({ description: 'Files', type: () => [File] })
-  files: File[];
-
   @ManyToOne(() => File, { nullable: true, eager: true })
   @ApiProperty({ description: 'Thumbnail', type: () => File })
   thumbnail?: File;
+
+  @OneToMany(() => File, (file) => file.album)
+  files: File[]
 }

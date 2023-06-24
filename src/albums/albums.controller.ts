@@ -3,12 +3,11 @@ import {
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
   Request,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -114,17 +113,7 @@ export class AlbumsController {
     @Body() addFilesDto: AddFilesDto,
     @Request() req,
   ) {
-    const album = await this.albumsService.findOne(albumId);
-    if (!album) {
-      throw new NotFoundException('Album not found');
-    }
-
-    await this.albumsService.addFilesToAlbum(
-      album,
-      addFilesDto.files,
-      req.user.id,
-    );
-    return album;
+    return this.albumsService.addFilesToAlbum(+albumId, addFilesDto, req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'), AlbumOwnerGuard)
@@ -140,17 +129,8 @@ export class AlbumsController {
     @Body() removeFilesDto: RemoveFilesDto,
     @Request() req,
   ) {
-    const album = await this.albumsService.findOne(albumId);
-    if (!album) {
-      throw new NotFoundException('Album not found');
-    }
 
-    await this.albumsService.removeFilesFromAlbum(
-      album,
-      removeFilesDto.files,
-      req.user.id,
-    );
-    return this.albumsService.findOne(albumId);
+    return this.albumsService.removeFilesFromAlbum(+albumId, removeFilesDto, req.user.id);
   }
 
   @Get('file/:id')

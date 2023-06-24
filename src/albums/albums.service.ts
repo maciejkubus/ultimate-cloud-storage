@@ -14,7 +14,9 @@ import {
 import { FilesService } from 'src/files/files.service';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
+import { AddFilesDto } from './dto/add-files-dto';
 import { CreateAlbumDto } from './dto/create-album.dto';
+import { RemoveFilesDto } from './dto/remove-files-dto';
 import { SetThumbnailDto } from './dto/set-thumbnail.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/album.entity';
@@ -46,7 +48,13 @@ export class AlbumsService {
 
   findOne(id: number): Promise<Album> {
     return this.albumRepository.findOne({
-      // relations: ['files'],
+      where: { id },
+    });
+  }
+
+  findOneWithFiles(id: number): Promise<Album> {
+    return this.albumRepository.findOne({
+      relations: ['files'],
       where: { id },
     });
   }
@@ -86,14 +94,15 @@ export class AlbumsService {
   }
 
   async updateThumbnail(albumId: number, setThumbnailDto: SetThumbnailDto) {
-    const album = await this.findOne(albumId);
+    let album = await this.findOneWithFiles(albumId);
     if (!album) {
       throw new NotFoundException('Album not found');
     }
 
     if (setThumbnailDto.fileId == null) {
       album.thumbnail = null;
-      return this.albumRepository.save(album);
+      await this.albumRepository.save(album);
+      return this.findOne(albumId);
     }
 
     const file = await this.fileService.findOne(setThumbnailDto.fileId);
@@ -106,8 +115,8 @@ export class AlbumsService {
     }
 
     album.thumbnail = file;
-
-    return this.albumRepository.save(album);
+    await this.albumRepository.save(album);
+    return this.findOne(albumId);
   }
 
   async remove(id: number) {
@@ -129,11 +138,16 @@ export class AlbumsService {
   }
 
   async addFilesToAlbum(
-    album: Album,
-    fileIds: number[],
+    albumId: number,
+    addFilesDto: AddFilesDto,
     userId: number,
-  ): Promise<void> {
-    const files = await this.fileService.findByIds(fileIds);
+  ) {
+    const album = await this.findOneWithFiles(albumId);
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+
+    const files = await this.fileService.findByIds(addFilesDto.files);
     files.forEach((file) => {
       if (file.user.id !== userId) {
         throw new BadRequestException(
@@ -146,14 +160,22 @@ export class AlbumsService {
       (file, index, self) => self.findIndex((f) => f.id === file.id) === index,
     );
     await this.albumRepository.save(album);
+    return this.findOne(albumId);
   }
 
   async removeFilesFromAlbum(
-    album: Album,
-    fileIds: number[],
+    albumId: number,
+    removeFilesDto: RemoveFilesDto,
     userId: number,
-  ): Promise<void> {
+  ) {
+    const album = await this.findOneWithFiles(albumId);
+    if (!album) {
+      throw new NotFoundException('Album not found');
+    }
+    
+    const fileIds = removeFilesDto.files;
     album.files = album.files.filter((file) => !fileIds.includes(file.id));
     await this.albumRepository.save(album);
+    return this.findOne(albumId);
   }
 }

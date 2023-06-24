@@ -4,10 +4,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
+  UpdateDateColumn
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
@@ -58,7 +57,7 @@ export class File {
   @ApiProperty({ description: 'User', type: () => User })
   user?: User;
 
-  @ManyToMany(() => Album, { eager: false })
-  @ApiProperty({ description: 'albums', type: () => [Album] })
-  albums: Album[];
+  @ManyToOne(() => Album, (album) => album.files, { nullable: true })
+  @ApiProperty({ description: 'User', type: () => User })
+  album?: Album;
 }
