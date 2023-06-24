@@ -120,7 +120,7 @@ export class AlbumsService {
   }
 
   async remove(id: number) {
-    const album = await this.findOne(id);
+    const album = await this.findOneWithFiles(id);
     if (album.files.length > 0) {
       throw new BadRequestException('Album is not empty');
     }
