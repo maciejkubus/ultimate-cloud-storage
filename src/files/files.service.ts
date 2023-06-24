@@ -35,10 +35,10 @@ export class FilesService {
 
   findByUserId(id: number, query: PaginateQuery): Promise<Paginated<File>> {
     return paginate(query, this.fileRepository, {
-      relations: ['user'],
+      relations: ['user', 'album'],
       where: { user: { id } },
-      sortableColumns: ['id', 'originalName', 'mimetype', 'size'],
-      searchableColumns: ['id', 'originalName', 'mimetype', 'size'],
+      sortableColumns: ['id', 'originalName', 'mimetype', 'size', 'album.id'],
+      searchableColumns: ['id', 'originalName', 'mimetype', 'size', 'album.id'],
       filterableColumns: {
         originalName: [FilterOperator.EQ],
         mimetype: [FilterOperator.EQ],
@@ -49,6 +49,7 @@ export class FilesService {
           FilterOperator.GTE,
           FilterOperator.LTE,
         ],
+        'album.id': [FilterOperator.EQ],
       },
     });
   }
