@@ -1,10 +1,16 @@
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
 export const databaseProviders = [
   {
     provide: 'DATA_SOURCE',
     useFactory: async () => {
-      const dataSource = new DataSource({
+      const devOptions: DataSourceOptions = {
+        type: 'better-sqlite3',
+        database : process.env.SQLITE_DB,
+        entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+        synchronize: process.env.ENVIROMENT === 'dev',
+      };
+      const prodOptions: DataSourceOptions = {
         type: 'mysql',
         host: process.env.DB_HOST,
         port: +process.env.DB_PORT,
@@ -13,7 +19,10 @@ export const databaseProviders = [
         database: process.env.DB_NAME,
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: process.env.ENVIROMENT === 'dev',
-      });
+      };
+      const dataSource = new DataSource(
+        process.env.ENVIROMENT === 'prod' ? prodOptions : devOptions,
+      );
 
       return dataSource.initialize();
     },
