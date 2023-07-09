@@ -61,7 +61,7 @@ export class AlbumsService {
 
   findByUserId(id: number, query: PaginateQuery): Promise<Paginated<Album>> {
     return paginate(query, this.albumRepository, {
-      relations: ['user'],
+      relations: ['user', 'thumbnail'],
       where: { user: { id } },
       sortableColumns: ['id', 'title'],
       defaultSortBy: [['title', 'ASC']],
