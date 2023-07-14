@@ -67,7 +67,7 @@ export class AlbumsService {
       defaultSortBy: [['title', 'ASC']],
       searchableColumns: ['title'],
       filterableColumns: {
-        title: [FilterOperator.EQ],
+        title: [FilterOperator.EQ, FilterOperator.SW],
       },
     });
   }
