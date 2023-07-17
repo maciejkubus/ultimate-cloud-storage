@@ -1,5 +1,5 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { compareSync } from 'bcrypt';
+import { compareSync } from 'bcryptjs';
 import {
   FilterOperator,
   PaginateQuery,

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { hashSync } from 'bcrypt';
+import { hashSync } from 'bcryptjs';
 import {
   Column,
   CreateDateColumn,
