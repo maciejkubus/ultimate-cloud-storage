@@ -7,6 +7,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { DatabaseModule } from './database/database.module';
 import { FilesModule } from './files/files.module';
 import { UsersModule } from './users/users.module';
+import { NoteModule } from './note/note.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UsersModule } from './users/users.module';
     AuthenticationModule,
     UsersModule,
     AlbumsModule,
+    NoteModule,
   ],
   controllers: [AppController],
   providers: [AppService],

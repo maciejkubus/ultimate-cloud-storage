@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { hashSync } from 'bcryptjs';
+import { Note } from 'src/note/entities/note.entity';
 import {
   Column,
   CreateDateColumn,
@@ -51,6 +52,9 @@ export class User {
 
   @OneToMany(() => Album, (album) => album.user)
   albums: Album[];
+
+  @OneToMany(() => Note, (note) => note.user)
+  notes: Note[];
 
   private tempPassword?: string;
 
