@@ -33,6 +33,13 @@ export class FilesService {
     });
   }
 
+  async share(id: number) {
+    const file = await this.findOne(id);
+    file.access = 'public';
+    await this.fileRepository.save(file);
+    return file;
+  }
+
   findByUserId(id: number, query: PaginateQuery): Promise<Paginated<File>> {
     return paginate(query, this.fileRepository, {
       relations: ['user', 'album'],
@@ -97,5 +104,10 @@ export class FilesService {
     }
 
     return file.user.id === userId;
+  }
+
+  async isFilePublic(fileId: number) {
+    const file = await this.findOne(fileId);
+    return file.access == 'public';
   }
 }

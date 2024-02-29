@@ -53,6 +53,13 @@ export class File {
   })
   path: string;
 
+  @Column('text', { default: 'private' })
+  @ApiProperty({
+    example: 'public',
+    description: 'public',
+  })
+  access: string;
+
   @ManyToOne(() => User, (user) => user.files, { nullable: true })
   @ApiProperty({ description: 'User', type: () => User })
   user?: User;

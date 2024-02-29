@@ -99,6 +99,17 @@ export class FilesController {
     return new StreamableFile(streamableFile);
   }
 
+  @UseGuards(AuthGuard('jwt'), FileOwnerGuard)
+  @Post(':id/share')
+  @ApiResponse({
+    status: 200,
+    description: 'File shared',
+  })
+  async shareFile(@Param('id') id: number, @Request() req) {
+    const file = await this.filesService.share(+id)
+    return file;
+  }
+
   @UseGuards(AuthGuard('jwt'))
   @Post()
   @UseInterceptors(FileInterceptor('file'))

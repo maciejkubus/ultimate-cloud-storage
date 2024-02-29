@@ -7,6 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { FilesController } from './files.controller';
 import { filesProviders } from './files.providers';
 import { FilesService } from './files.service';
+import { PublicController } from './public.controller';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { FilesService } from './files.service';
   ],
   providers: [FilesService, ...filesProviders],
   exports: [FilesService],
-  controllers: [FilesController],
+  controllers: [FilesController, PublicController],
 })
 export class FilesModule {}
