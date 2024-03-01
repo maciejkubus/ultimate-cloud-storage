@@ -8,6 +8,7 @@ import { DatabaseModule } from './database/database.module';
 import { FilesModule } from './files/files.module';
 import { UsersModule } from './users/users.module';
 import { NoteModule } from './note/note.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { NoteModule } from './note/note.module';
     UsersModule,
     AlbumsModule,
     NoteModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
