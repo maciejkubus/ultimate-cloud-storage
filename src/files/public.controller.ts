@@ -7,8 +7,7 @@ import {
   StreamableFile,
   UseGuards
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -17,12 +16,11 @@ import { FilesService } from './files.service';
 import { FilePublicGuard } from './guards/file-public-guard';
 
 @ApiTags('Public')
-@ApiBearerAuth()
 @Controller('public')
 export class PublicController {
   constructor(private readonly filesService: FilesService) {}
 
-  @UseGuards(AuthGuard('jwt'), FilePublicGuard)
+  @UseGuards(FilePublicGuard)
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -33,7 +31,7 @@ export class PublicController {
     return this.filesService.findOne(+id);
   }
 
-  @UseGuards(AuthGuard('jwt'), FilePublicGuard)
+  @UseGuards(FilePublicGuard)
   @Get(':id/download')
   @ApiResponse({
     status: 200,
@@ -58,7 +56,7 @@ export class PublicController {
     return new StreamableFile(streamableFile);
   }
 
-  @UseGuards(AuthGuard('jwt'), FilePublicGuard)
+  @UseGuards(FilePublicGuard)
   @Get(':id/preview')
   @ApiResponse({
     status: 200,
