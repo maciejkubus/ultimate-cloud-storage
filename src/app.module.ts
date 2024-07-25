@@ -9,6 +9,7 @@ import { FilesModule } from './files/files.module';
 import { UsersModule } from './users/users.module';
 import { NoteModule } from './note/note.module';
 import { MailModule } from './mail/mail.module';
+import { AddictionModule } from './addiction/addiction.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MailModule } from './mail/mail.module';
     AlbumsModule,
     NoteModule,
     MailModule,
+    AddictionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
