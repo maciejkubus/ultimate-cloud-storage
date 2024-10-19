@@ -42,6 +42,12 @@ export class FilesController {
     return this.filesService.findByUserId(req.user.id, query);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('to-sync')
+  async toSync(@Request() req) {
+    return await this.filesService.syncData(+req.user.id)
+  }
+
   @UseGuards(AuthGuard('jwt'), FileOwnerGuard)
   @Get(':id')
   @ApiResponse({

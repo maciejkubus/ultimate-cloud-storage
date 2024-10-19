@@ -110,4 +110,12 @@ export class FilesService {
     const file = await this.findOne(fileId);
     return file.access == 'public';
   }
+
+  async syncData(userId: number) {
+    const files = await this.fileRepository.find({
+      relations: ['user'],
+      where: { user: { id: userId } },
+    });
+    return files.map(file => file.originalName);
+  }
 }
