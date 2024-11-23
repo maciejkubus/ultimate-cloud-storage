@@ -45,7 +45,7 @@ export class ExpensesService {
 
   async remove(id: number) {
     await this.expensesRepository.delete(id);
-    return `Note ${id} deleted.`;
+    return `Expense #${id} deleted.`;
   }
 
   async isOwner(expenseId: number, userId: number): Promise<boolean> {
