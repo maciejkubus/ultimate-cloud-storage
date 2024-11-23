@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Paginate, PaginateQuery } from 'nestjs-paginate';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { ExpensesService } from './expenses.service';
@@ -17,8 +18,8 @@ export class ExpensesController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
-  async findAllMine(@Request() req) {
-    return await this.expensesService.findAllByUserId(+req.user.id);
+  async findAllMine(@Request() req, @Paginate() query: PaginateQuery) {
+    return await this.expensesService.findAllByUserId(+req.user.id, query);
   }
 
   @UseGuards(AuthGuard('jwt'), ExpenseOwnerGuard)

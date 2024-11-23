@@ -1,4 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { FilterOperator, paginate, PaginateQuery } from 'nestjs-paginate';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { CreateExpenseDto } from './dto/create-expense.dto';
@@ -24,7 +25,23 @@ export class ExpensesService {
     return await this.expensesRepository.save(expense);
   }
 
-  async findAllByUserId(id: number) {
+  async findAllByUserId(id: number, query: PaginateQuery) {
+    return paginate(query, this.expensesRepository, {
+      relations: ['user'],
+      where: { user: { id } },
+      sortableColumns: ['name', 'description', 'category', 'tags', 'amount', 'isTransactionOut', 'created', 'updated'],
+      defaultSortBy: [['created', 'DESC']],
+      searchableColumns: ['name', 'description', 'category', 'tags'],
+      filterableColumns: {
+        amount: [FilterOperator.EQ, FilterOperator.SW, FilterOperator.LT],
+        name: [FilterOperator.CONTAINS],
+        description: [FilterOperator.CONTAINS],
+        category: [FilterOperator.CONTAINS],
+        tags: [FilterOperator.CONTAINS]
+      },
+      maxLimit: 100,
+      defaultLimit: 100,
+    })
     return await this.expensesRepository.find({
       relations: ['user'],
       where: { user: { id } }

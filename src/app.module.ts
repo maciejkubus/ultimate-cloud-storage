@@ -1,17 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AddictionModule } from './addiction/addiction.module';
 import { AlbumsModule } from './albums/albums.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { DatabaseModule } from './database/database.module';
-import { FilesModule } from './files/files.module';
-import { UsersModule } from './users/users.module';
-import { NoteModule } from './note/note.module';
-import { MailModule } from './mail/mail.module';
-import { AddictionModule } from './addiction/addiction.module';
 import { ExpensesModule } from './expenses/expenses.module';
-import { ExpensesTagsModule } from './expenses-tags/expenses-tags.module';
+import { FilesModule } from './files/files.module';
+import { MailModule } from './mail/mail.module';
+import { NoteModule } from './note/note.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -25,7 +24,6 @@ import { ExpensesTagsModule } from './expenses-tags/expenses-tags.module';
     MailModule,
     AddictionModule,
     ExpensesModule,
-    ExpensesTagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

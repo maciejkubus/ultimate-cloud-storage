@@ -1,4 +1,3 @@
-import { ExpensesTag } from "src/expenses-tags/entities/expenses-tag.entity";
 import { User } from "src/users/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -20,6 +19,12 @@ export class Expense {
   @Column('text', { nullable: true })
   description?: string;
 
+  @Column('text', { nullable: true })
+  category?: string;
+
+  @Column('text', { nullable: true })
+  tags?: string;
+
   @Column('float', { default: '0'})
   amount: number;
 
@@ -28,7 +33,4 @@ export class Expense {
 
   @ManyToOne(() => User, (user) => user.expenses, { nullable: true })
   user?: User;
-
-  @ManyToOne(() => ExpensesTag, (tag) => tag.expenses, { nullable: true })
-  expensesTag?: ExpensesTag;
 }
