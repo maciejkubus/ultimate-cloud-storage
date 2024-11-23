@@ -10,6 +10,16 @@ export class CreateExpenseDto {
   @IsOptional()
   description?: string
 
+  @IsString()
+  @Length(0, 20)
+  @IsOptional()
+  category?: string
+
+  @IsString()
+  @Length(0, 60)
+  @IsOptional()
+  tags?: string
+
   @IsNumber()
   @Min(0)
   amount: number;
