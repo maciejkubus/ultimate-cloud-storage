@@ -29,7 +29,7 @@ export class Expense {
   amount: number;
 
   @Column('boolean', { default: true })
-  isTransactionOut?: boolean;
+  isTransactionOut: boolean;
 
   @ManyToOne(() => User, (user) => user.expenses, { nullable: true })
   user?: User;

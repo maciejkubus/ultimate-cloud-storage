@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { Expense } from './entities/expense.entity';
+import { generateStats } from './stats/generate-stats';
 
 @Injectable()
 export class ExpensesService {
@@ -71,7 +72,15 @@ export class ExpensesService {
       return false;
     }
 
-
     return expense.user.id === userId;
+  }
+
+  async stats(id: number) {
+    const expenses = await this.expensesRepository.find({
+      relations: ['user'],
+      where: { user: { id } }
+    })
+    const stats = generateStats(expenses);
+    return stats;
   }
 }

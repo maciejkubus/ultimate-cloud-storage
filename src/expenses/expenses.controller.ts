@@ -22,12 +22,17 @@ export class ExpensesController {
     return await this.expensesService.findAllByUserId(+req.user.id, query);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('stats')
+  stats(@Request() req) {
+    return this.expensesService.stats(+req.user.id);
+  }
+
   @UseGuards(AuthGuard('jwt'), ExpenseOwnerGuard)
-  @Get()
+  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.expensesService.findOne(+id);
   }
-
 
   @UseGuards(AuthGuard('jwt'), ExpenseOwnerGuard)
   @Patch(':id')
