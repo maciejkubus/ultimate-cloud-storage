@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { hashSync } from 'bcryptjs';
 import { Addiction } from 'src/addiction/entities/addiction.entity';
+import { Expense } from 'src/expenses/entities/expense.entity';
 import { Note } from 'src/note/entities/note.entity';
 import {
   Column,
@@ -59,6 +60,9 @@ export class User {
 
   @OneToMany(() => Addiction, (addiction) => addiction.user)
   addictions: Addiction[];
+
+  @OneToMany(() => Expense, (expense) => expense.user)
+  expenses: Expense[];
 
   private tempPassword?: string;
 

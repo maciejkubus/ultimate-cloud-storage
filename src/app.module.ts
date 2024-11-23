@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { NoteModule } from './note/note.module';
 import { MailModule } from './mail/mail.module';
 import { AddictionModule } from './addiction/addiction.module';
+import { ExpensesModule } from './expenses/expenses.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AddictionModule } from './addiction/addiction.module';
     NoteModule,
     MailModule,
     AddictionModule,
+    ExpensesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
