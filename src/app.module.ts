@@ -11,6 +11,7 @@ import { NoteModule } from './note/note.module';
 import { MailModule } from './mail/mail.module';
 import { AddictionModule } from './addiction/addiction.module';
 import { ExpensesModule } from './expenses/expenses.module';
+import { ExpensesTagsModule } from './expenses-tags/expenses-tags.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ExpensesModule } from './expenses/expenses.module';
     MailModule,
     AddictionModule,
     ExpensesModule,
+    ExpensesTagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

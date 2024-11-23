@@ -9,5 +9,6 @@ import { ExpensesService } from './expenses.service';
   imports: [DatabaseModule, UsersModule],
   controllers: [ExpensesController],
   providers: [ExpensesService, ...expensesProviders],
+  exports: [ExpensesService],
 })
 export class ExpensesModule {}

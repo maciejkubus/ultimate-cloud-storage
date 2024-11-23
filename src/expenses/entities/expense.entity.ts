@@ -1,3 +1,4 @@
+import { ExpensesTag } from "src/expenses-tags/entities/expenses-tag.entity";
 import { User } from "src/users/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
@@ -27,4 +28,7 @@ export class Expense {
 
   @ManyToOne(() => User, (user) => user.expenses, { nullable: true })
   user?: User;
+
+  @ManyToOne(() => ExpensesTag, (tag) => tag.expenses, { nullable: true })
+  expensesTag?: ExpensesTag;
 }
