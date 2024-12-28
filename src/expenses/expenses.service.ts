@@ -78,7 +78,8 @@ export class ExpensesService {
   async stats(id: number) {
     const expenses = await this.expensesRepository.find({
       relations: ['user'],
-      where: { user: { id } }
+      where: { user: { id } },
+      order: { created: "ASC" }
     })
     const stats = generateStats(expenses);
     return stats;
