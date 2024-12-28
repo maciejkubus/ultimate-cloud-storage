@@ -14,7 +14,7 @@ function generateLastYearGraph() {
   let ago = new Date();
   ago.setFullYear(now.getFullYear() - 1);
   ago.setMonth(ago.getMonth() + 1);
-  
+
   for (let index = 0; index < 12; index++) {
     const year = ago.getUTCFullYear();
     const month = ago.getMonth() + 1;
@@ -39,6 +39,11 @@ export function generateStats(expenses: Expense[]) {
   }
   stats['sum'] = sum
 
+  const now = new Date();
+
+  const outcomeTransaction = expenses.filter(expense => expense.isTransactionOut).sort((a, b) => b.amount - a.amount).slice(0, 2)
+  const incomeTransaction = expenses.filter(expense => !expense.isTransactionOut).sort((a, b) => b.amount - a.amount).slice(0, 2)
+
   //raport
   const raport = {
     lastYear: {  
@@ -46,6 +51,14 @@ export function generateStats(expenses: Expense[]) {
       outcome: 0,
       graph: {},
     },
+    currentMonth: {
+      income: 0,
+      outcome: 0,
+    },
+    top: {
+      outcome: outcomeTransaction,
+      income: incomeTransaction,
+    }
   }
   raport.lastYear.graph = generateLastYearGraph();
   for(const expense of expenses) {
@@ -57,16 +70,12 @@ export function generateStats(expenses: Expense[]) {
     const month = created.getMonth() + 1;
     const day = created.getDate();
 
-    const formatedExpense = {
-      id: expense.id,
-      name: expense.name,
-      amount: expense.amount * (expense.isTransactionOut ? -1 : 1),
-      date: {
-        year,
-        month,
-        day,
-      }
-    };
+    if(year == now.getUTCFullYear() && month == now.getMonth() + 1) {
+      if(expense.isTransactionOut) 
+        raport.currentMonth.outcome += expense.amount;
+      else
+        raport.currentMonth.income += expense.amount
+    }
 
     //last year
     if(occurredInLastYear(created)) {
@@ -80,9 +89,6 @@ export function generateStats(expenses: Expense[]) {
         raport.lastYear.graph[lastYearKey].income += expense.amount;
       }
     }
-
-
-
   }
 
   stats['raport'] = raport;
