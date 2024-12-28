@@ -14,6 +14,7 @@ import { Paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
 import { ChangePasswordDto } from './dto/change-password-dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { GuestGuard } from './guards/guest.guard copy';
 import { MyAccountGuard } from './guards/my-account.guard';
 import { UsersService } from './users.service';
 
@@ -56,7 +57,7 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @UseGuards(AuthGuard('jwt'), MyAccountGuard)
+  @UseGuards(AuthGuard('jwt'), MyAccountGuard, GuestGuard)
   @Patch(':id')
   @ApiResponse({
     status: 200,
@@ -71,7 +72,7 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
-  @UseGuards(AuthGuard('jwt'), MyAccountGuard)
+  @UseGuards(AuthGuard('jwt'), MyAccountGuard, GuestGuard)
   @Patch(':id/change-password')
   @ApiResponse({
     status: 200,
@@ -86,7 +87,7 @@ export class UsersController {
     return this.usersService.changePassword(+id, changePasswordDto);
   }
 
-  @UseGuards(AuthGuard('jwt'), MyAccountGuard)
+  @UseGuards(AuthGuard('jwt'), MyAccountGuard, GuestGuard)
   @Delete(':id')
   @ApiResponse({
     status: 200,

@@ -84,4 +84,9 @@ export class UsersService {
     }
     return null;
   }
+
+  async isNotGuest(id: number) {
+    const user = await this.findOne(id);
+    return user.role != 'guest';
+  }
 }

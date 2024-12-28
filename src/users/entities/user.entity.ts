@@ -34,6 +34,9 @@ export class User {
   @ApiProperty({ example: 'user@domain.com', description: 'User email' })
   email: string;
 
+  @Column('text', { default: 'user' })
+  role: string;
+
   @Column('text')
   @CreateDateColumn()
   @ApiProperty({
