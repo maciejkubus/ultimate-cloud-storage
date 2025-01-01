@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { Between, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './entities/event.entity';
@@ -31,17 +31,10 @@ export class EventsService {
     })
   }
 
-  async findDate(date: string, id: number) {
-    const dateParts = date.split('-');
-    const year = parseInt(dateParts[0]);
-    const month = parseInt(dateParts[1]);
-    const fromDate = new Date(`${year}-${(month < 10 ? '0' : '') + month}-01 00:00:00`);
-    const lastDay = new Date(year, month, 0);
-    const toDate = new Date(`${year}-${(month < 10 ? '0' : '') + month}-${lastDay.getDate()} 23:59:59`);
-
+  async findEvents(id: number) {
     return await this.eventsRepository.find({
       relations: ['user'],
-      where: { user: { id }, created: Between(fromDate, toDate) },
+      where: { user: { id }},
     })
   }
 

@@ -25,10 +25,10 @@ export class Event {
     @Column('text')
     color: string;
 
-    @Column('date')
+    @Column('timestamp')
     start: Date;
 
-    @Column('date', { nullable: true })
+    @Column('timestamp', { nullable: true })
     end?: Date | null;
   
     @ManyToOne(() => User, (user) => user.expenses, { nullable: true })

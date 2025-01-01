@@ -16,9 +16,9 @@ export class EventsController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':date')
-  findDate(@Param('date') date: string, @Request() req) {
-    return this.eventsService.findDate(date, +req.user.id);
+  @Get()
+  findEvents(@Request() req) {
+    return this.eventsService.findEvents(+req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'), EventOwnerGuard)

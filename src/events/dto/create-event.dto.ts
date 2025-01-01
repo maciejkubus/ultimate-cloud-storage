@@ -1,4 +1,4 @@
-import { IsDate, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsOptional, IsString } from "class-validator";
 
 export class CreateEventDto {
   @IsString()
@@ -14,10 +14,10 @@ export class CreateEventDto {
   @IsString()
   color: string;
 
-  @IsDate()
-  start: Date;
+  @IsDateString()
+  start: Date | string;
 
-  @IsDate()
+  @IsDateString()
   @IsOptional()
-  end?: Date;
+  end?: Date | string;
 }
