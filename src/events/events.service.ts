@@ -35,6 +35,7 @@ export class EventsService {
     return await this.eventsRepository.find({
       relations: ['user'],
       where: { user: { id }},
+      order: { created: "ASC" }
     })
   }
 
