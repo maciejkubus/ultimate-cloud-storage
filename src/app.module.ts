@@ -11,6 +11,7 @@ import { FilesModule } from './files/files.module';
 import { MailModule } from './mail/mail.module';
 import { NoteModule } from './note/note.module';
 import { UsersModule } from './users/users.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { UsersModule } from './users/users.module';
     MailModule,
     AddictionModule,
     ExpensesModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
