@@ -22,6 +22,9 @@ export class Event {
     @Column('text')
     type: "event" | "task";
 
+    @Column('text')
+    color: string;
+
     @Column('date')
     start: Date;
 

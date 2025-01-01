@@ -11,6 +11,9 @@ export class CreateEventDto {
   @IsString()
   type: 'event' | 'task';
 
+  @IsString()
+  color: string;
+
   @IsDate()
   start: Date;
 
