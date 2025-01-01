@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { FilterOperator, paginate, PaginateQuery } from 'nestjs-paginate';
 import { UsersService } from 'src/users/users.service';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 import { UpdateExpenseDto } from './dto/update-expense.dto';
 import { Expense } from './entities/expense.entity';
@@ -46,6 +46,32 @@ export class ExpensesService {
     return await this.expensesRepository.find({
       relations: ['user'],
       where: { user: { id } }
+    })
+  }
+
+  async findInMonthByUserId(id: number, date: string,  query: PaginateQuery) {
+    const dateParts = date.split('-');
+    const year = parseInt(dateParts[0]);
+    const month = parseInt(dateParts[1]);
+    const fromDate = new Date(`${year}-${(month < 10 ? '0' : '') + month}-01 00:00:00`);
+    const lastDay = new Date(year, month, 0);
+    const toDate = new Date(`${year}-${(month < 10 ? '0' : '') + month}-${lastDay.getDate()} 23:59:59`);
+
+    return paginate(query, this.expensesRepository, {
+      relations: ['user'],
+      where: { user: { id }, created: Between(fromDate, toDate) },
+      sortableColumns: ['name', 'description', 'category', 'tags', 'amount', 'isTransactionOut', 'created', 'updated'],
+      defaultSortBy: [['created', 'DESC']],
+      searchableColumns: ['name', 'description', 'category', 'tags'],
+      filterableColumns: {
+        amount: [FilterOperator.EQ, FilterOperator.SW, FilterOperator.LT],
+        name: [FilterOperator.CONTAINS],
+        description: [FilterOperator.CONTAINS],
+        category: [FilterOperator.CONTAINS],
+        tags: [FilterOperator.CONTAINS]
+      },
+      maxLimit: 100,
+      defaultLimit: 100,
     })
   }
 

@@ -28,6 +28,12 @@ export class ExpensesController {
     return this.expensesService.stats(+req.user.id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/month/:date')
+  async inMonth(@Request() req, @Param('date') date: string, @Paginate() query: PaginateQuery) {
+    return await this.expensesService.findInMonthByUserId(+req.user.id, date, query);
+  }
+
   @UseGuards(AuthGuard('jwt'), ExpenseOwnerGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
