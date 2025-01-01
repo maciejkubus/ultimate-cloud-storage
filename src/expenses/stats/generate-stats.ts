@@ -80,13 +80,18 @@ export function generateStats(expenses: Expense[]) {
     //last year
     if(occurredInLastYear(created)) {
       const lastYearKey = year + "-" + month
-      if (expense.isTransactionOut && raport.lastYear.graph[lastYearKey]) {
-        raport.lastYear.outcome += expense.amount;
-        raport.lastYear.graph[lastYearKey].outcome += expense.amount;
-      }
-      else {
-        raport.lastYear.income += expense.amount;
-        raport.lastYear.graph[lastYearKey].income += expense.amount;
+
+      try {
+        if (expense.isTransactionOut && raport.lastYear.graph[lastYearKey] !== undefined) {
+          raport.lastYear.outcome += expense.amount;
+          raport.lastYear.graph[lastYearKey].outcome += expense.amount;
+        }
+        else {
+          raport.lastYear.income += expense.amount;
+          raport.lastYear.graph[lastYearKey].income += expense.amount;
+        }
+      } catch(e: any) {
+        console.log('Error in graph generator');
       }
     }
   }
