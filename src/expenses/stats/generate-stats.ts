@@ -77,21 +77,15 @@ export function generateStats(expenses: Expense[]) {
         raport.currentMonth.income += expense.amount
     }
 
-    //last year
-    if(occurredInLastYear(created)) {
-      const lastYearKey = year + "-" + month
-
-      try {
-        if (expense.isTransactionOut && raport.lastYear.graph[lastYearKey] !== undefined) {
-          raport.lastYear.outcome += expense.amount;
-          raport.lastYear.graph[lastYearKey].outcome += expense.amount;
-        }
-        else {
-          raport.lastYear.income += expense.amount;
-          raport.lastYear.graph[lastYearKey].income += expense.amount;
-        }
-      } catch(e: any) {
-        console.log('Error in graph generator');
+    const lastYearKey = year + "-" + month
+    if(occurredInLastYear(created) && raport.lastYear.graph[lastYearKey] !== undefined) {
+      if (expense.isTransactionOut) {
+        raport.lastYear.outcome += expense.amount;
+        raport.lastYear.graph[lastYearKey].outcome += expense.amount;
+      }
+      else {
+        raport.lastYear.income += expense.amount;
+        raport.lastYear.graph[lastYearKey].income += expense.amount;
       }
     }
   }
