@@ -29,7 +29,7 @@ export class ExpensesController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('/month/:date')
+  @Get('/month/:date') //YYYY-MM
   async inMonth(@Request() req, @Param('date') date: string, @Paginate() query: PaginateQuery) {
     return await this.expensesService.findInMonthByUserId(+req.user.id, date, query);
   }
