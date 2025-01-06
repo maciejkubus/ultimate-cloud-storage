@@ -12,6 +12,7 @@ import { MailModule } from './mail/mail.module';
 import { NoteModule } from './note/note.module';
 import { UsersModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
+import { MessagesModule } from './messages/messages.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { EventsModule } from './events/events.module';
     AddictionModule,
     ExpensesModule,
     EventsModule,
+    MessagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

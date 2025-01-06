@@ -25,10 +25,10 @@ export class Event {
     @Column('text')
     color: string;
 
-    @Column('timestamp')
+    @Column(process.env.ENVIROMENT === 'prod' ? 'timestamp' : 'datetime')
     start: Date;
 
-    @Column('timestamp', { nullable: true })
+    @Column(process.env.ENVIROMENT === 'prod' ? 'timestamp' : 'datetime', { nullable: true })
     end?: Date | null;
   
     @ManyToOne(() => User, (user) => user.expenses, { nullable: true })
