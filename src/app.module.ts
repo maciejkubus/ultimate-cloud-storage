@@ -13,6 +13,7 @@ import { NoteModule } from './note/note.module';
 import { UsersModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
+import { EmotionsModule } from './emotions/emotions.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { MessagesModule } from './messages/messages.module';
     ExpensesModule,
     EventsModule,
     MessagesModule,
+    EmotionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

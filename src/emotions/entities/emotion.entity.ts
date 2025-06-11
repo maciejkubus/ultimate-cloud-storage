@@ -1,16 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn
-} from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+import { ApiProperty } from "@nestjs/swagger";
+import { User } from "src/users/entities/user.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
-export class Addiction {
+export class Emotion {
   @PrimaryGeneratedColumn()
   @ApiProperty({ example: 1, description: 'Unique identifier' })
   id: number;
@@ -30,12 +23,12 @@ export class Addiction {
   updated?: Date;
 
   @Column('text')
-  title: string;
+  name: string;
 
-  @Column('date')
-  soberDate: string;
+  @Column('text')
+  emoticon: string;
 
-  @ManyToOne(() => User, (user) => user.addictions, { nullable: true })
+  @ManyToOne(() => User, (user) => user.emotions, { nullable: true })
   @ApiProperty({ description: 'User', type: () => User })
   user?: User;
 }

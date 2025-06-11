@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { hashSync } from 'bcryptjs';
 import { Addiction } from 'src/addiction/entities/addiction.entity';
+import { Emotion } from 'src/emotions/entities/emotion.entity';
 import { Expense } from 'src/expenses/entities/expense.entity';
 import { Message } from 'src/messages/entities/message.entity';
 import { Note } from 'src/note/entities/note.entity';
@@ -73,6 +74,9 @@ export class User {
 
   @OneToMany(() => Message, (message) => message.receiver)
   receivedMessages: Message[];
+
+  @OneToMany(() => Emotion, (emotion) => emotion.user)
+  emotions: Emotion[];
 
   private tempPassword?: string;
 
