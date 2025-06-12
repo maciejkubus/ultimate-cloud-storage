@@ -14,6 +14,7 @@ import { UsersModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
 import { MessagesModule } from './messages/messages.module';
 import { EmotionsModule } from './emotions/emotions.module';
+import { EmotionCheckModule } from './emotion-check/emotion-check.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { EmotionsModule } from './emotions/emotions.module';
     EventsModule,
     MessagesModule,
     EmotionsModule,
+    EmotionCheckModule,
   ],
   controllers: [AppController],
   providers: [AppService],

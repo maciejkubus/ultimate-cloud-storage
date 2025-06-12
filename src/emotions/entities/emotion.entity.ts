@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { EmotionCheck } from "src/emotion-check/entities/emotion-check.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Emotion {
@@ -31,4 +32,7 @@ export class Emotion {
   @ManyToOne(() => User, (user) => user.emotions, { nullable: true })
   @ApiProperty({ description: 'User', type: () => User })
   user?: User;
+
+  @ManyToMany(() => EmotionCheck, (emotionCheck) => emotionCheck.emotions)
+  emotionChecks: EmotionCheck[];
 }

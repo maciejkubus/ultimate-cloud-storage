@@ -9,5 +9,6 @@ import { EmotionsService } from './emotions.service';
   imports: [DatabaseModule, UsersModule],
   controllers: [EmotionsController],
   providers: [EmotionsService, ...emotionsProviders],
+  exports: [EmotionsService]
 })
 export class EmotionsModule {}
